@@ -199,6 +199,7 @@ function register_bulk_action($bulk_actions) {
 	$bulk_actions['mnml_woo_product_push'] = "Push to Woo Shops";
 	return $bulk_actions;
 }
+
 add_filter( 'handle_bulk_actions-edit-product', __NAMESPACE__.'\handle_bulk_action', 10, 3 ); 
 function handle_bulk_action( $redirect_to, $doaction, $post_ids ) {
 	if ( $doaction !== 'mnml_woo_product_push' ) return $redirect_to;
@@ -214,9 +215,11 @@ function handle_bulk_action( $redirect_to, $doaction, $post_ids ) {
 	$redirect_to = add_query_arg( 'products_pushed', count( $post_ids ), $redirect_to );
 	return $redirect_to;
 }
+
 add_action( 'admin_notices', __NAMESPACE__.'\bulk_action_admin_notice' );
 function bulk_action_admin_notice() {
-  if ( ! empty( $_GET['products_pushed'] ) ) {
-    echo '<div class="updated fade"><p>Pushed ' . intval( $_GET['products_pushed'] ) . ' products.</div>';
-  }
+	if ( empty( $_GET['products_pushed'] ) ) return;
+	echo '<div class="updated fade"><p>Pushed ' . intval( $_GET['products_pushed'] ) . ' products.</div>';
+	$_SERVER['REQUEST_URI'] = remove_query_arg( 'products_pushed', $_SERVER['REQUEST_URI'] );
+	unset( $_GET['products_pushed'] );
 }
