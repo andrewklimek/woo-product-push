@@ -74,7 +74,7 @@ function push_item( $pid, $domain, $usrpwd ) {
 				$variation = $controller->get_item( ['id' => $vid, 'product_id' => $pid, 'context' => 'view' ] );
 				$variation = $variation->data;
 				$variation = remove_ids_etc( $variation );
-				if ( $weight_unit ) $variation['weight'] = wc_get_weight( $variation['weight'], $weight_unit );
+				if ( $weight_unit ) $variation['weight'] = number_format( wc_get_weight( $variation['weight'], $weight_unit ), 2 );
 				if ( $variation['sku'] === $product['sku'] ) unset( $variation['sku'] );
 		
 				log( "VARIATION $vid" );
